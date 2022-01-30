@@ -1,9 +1,12 @@
 import React from 'react'
-import { Grid, Paper, TextField, Box, Button, Typography } from '@mui/material'
+import axios from 'axios'
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { useForm } from 'react-hook-form'
 import { Errorform } from '../componets/utils/Errorform'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 const styles = {
     container: {
@@ -35,20 +38,53 @@ const styles = {
 }
 
 export const ResetPasswordScreen = () => {
+    const validationSchema = Yup.object().shape({
+        password: Yup.string()
+            .required('Password is required')
+            .min(6, 'Password must be at least 6 characters'),
+        confirmPassword: Yup.string()
+            .required('Confirm Password is required')
+            .oneOf([Yup.ref('password')], 'Passwords must match'),
+    })
+    const formOptions = { resolver: yupResolver(validationSchema) }
+
+    const params = useParams()
     const navigate = useNavigate()
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    const [errorForm, setErrorForm] = React.useState('')
+    // const {
+    //     register,
+    //     handleSubmit,
+    //     formState: { errors },
+    // } = useForm()
+    const { handleSubmit, register, formState } = useForm({ mode: 'onChange', ...formOptions })
 
-    const onSubmit = (data, e) => {
+    const onSubmit = async (data, e) => {
         e.preventDefault()
-        console.log(data)
-        console.log(e.target)
-        e.target.reset()
+        const config = {
+            header: {
+                'Content-Type': 'application/json',
+            },
+        }
+        try {
+            // const response = await axios.put(
+            //     `api/auth/reset-password/${params.token}`,
+            //     data,
+            //     config
+            // )
 
-        navigate('/login')
+            const response = await axios.put(
+                `/api/auth/reset-password/${params.token}`,
+                data,
+                config
+            )
+            console.log(response)
+            navigate('/login')
+        } catch (error) {
+            setErrorForm(error.response.data.error)
+            setTimeout(() => {
+                setErrorForm('')
+            }, 5000)
+        }
     }
 
     return (
@@ -70,6 +106,11 @@ export const ResetPasswordScreen = () => {
                             Create a new password for your account.
                         </Typography>
                     </Box>
+                    {errorForm && (
+                        <Alert severity='warning' variant='outlined' sx={{ mt: 4, ml: 4 }}>
+                            {errorForm}
+                        </Alert>
+                    )}
                     <Grid item>
                         <TextField
                             label='Password'
@@ -78,31 +119,41 @@ export const ResetPasswordScreen = () => {
                             type='password'
                             fullWidth
                             {...register('password', {
-                                required: 'You must specify a password',
+                                required: {
+                                    value: true,
+                                    message: 'Password is required',
+                                },
                                 minLength: {
                                     value: 6,
                                     message: 'Password must have at least 6 characters',
                                 },
                             })}
                         />
-                        {errors.password && <Errorform error={errors.email.password} />}
+                        {formState.errors.password && (
+                            <Errorform error={formState.errors.password.message} />
+                        )}
                     </Grid>
                     <Grid item>
                         <TextField
-                            label='Confirm Password'
-                            id='passwordConfirm'
+                            label='Password'
+                            id='confirmPassword'
                             variant='standard'
                             type='password'
                             fullWidth
-                            {...register('password2', {
-                                required: 'You must specify a password',
+                            {...register('confirmPassword', {
+                                required: {
+                                    value: true,
+                                    message: 'Password is required',
+                                },
                                 minLength: {
                                     value: 6,
                                     message: 'Password must have at least 6 characters',
                                 },
                             })}
                         />
-                        {errors.password2 && <Errorform error={errors.email.password2} />}
+                        {formState.errors.confirmPassword && (
+                            <Errorform error={formState.errors.confirmPassword.message} />
+                        )}
                     </Grid>
                     <Grid item>
                         <Button type='submit' variant='contained' fullWidth>
