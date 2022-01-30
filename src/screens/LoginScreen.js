@@ -7,9 +7,9 @@ import {
     Box,
     Button,
     Typography,
-    Checkbox,
-    FormGroup,
-    FormControlLabel,
+    // Checkbox,
+    // FormGroup,
+    // FormControlLabel,
     Alert,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
@@ -54,12 +54,12 @@ export const LoginScreen = () => {
         }
     })
     const { handleSubmit, register, formState } = useForm({ mode: 'onChange' })
-    const [checked, setChecked] = React.useState(false)
+    // const [checked, setChecked] = React.useState(false)
     const [errorForm, setErrorForm] = React.useState('')
 
-    const handleCheckbox = (event) => {
-        setChecked(event.target.checked)
-    }
+    // const handleCheckbox = (event) => {
+    //     setChecked(event.target.checked)
+    // }
 
     const onSubmit = async (data, e) => {
         e.preventDefault()
@@ -139,7 +139,7 @@ export const LoginScreen = () => {
                             <Errorform error={formState.errors.password.message} />
                         )}
                     </Grid>
-                    <Grid item>
+                    {/* <Grid item>
                         <FormGroup>
                             <FormControlLabel
                                 control={
@@ -153,7 +153,7 @@ export const LoginScreen = () => {
                                 style={{ color: grey[600] }}
                             />
                         </FormGroup>
-                    </Grid>
+                    </Grid> */}
                     <Grid item>
                         <Button type='submit' variant='contained' fullWidth>
                             Login
