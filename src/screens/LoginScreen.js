@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import {
     Grid,
     Paper,
@@ -9,9 +10,10 @@ import {
     Checkbox,
     FormGroup,
     FormControlLabel,
+    Alert,
 } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { Errorform } from '../componets/utils/Errorform'
 
@@ -44,22 +46,46 @@ const styles = {
 }
 
 export const LoginScreen = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm()
+    // if user has token , he cant reaccess this page at least he logged out.
+    const navigate = useNavigate()
+    React.useEffect(() => {
+        if (localStorage.getItem('authToken')) {
+            navigate('/')
+        }
+    })
+    const { handleSubmit, register, formState } = useForm({ mode: 'onChange' })
     const [checked, setChecked] = React.useState(false)
+    const [errorForm, setErrorForm] = React.useState('')
 
     const handleCheckbox = (event) => {
         setChecked(event.target.checked)
     }
 
-    const onSubmit = (data, e) => {
+    const onSubmit = async (data, e) => {
         e.preventDefault()
-        console.log(data)
-        console.log(e.target)
-        e.target.reset()
+
+        // Axios config.
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+
+        //  Save authToken to localStorage.
+        try {
+            const response = await axios.post('api/auth/login', data, config)
+            localStorage.setItem('authToken', response.data.userData.token)
+            navigate('/', { replace: true })
+            e.target.reset()
+
+            // if request failed.
+        } catch (error) {
+            setErrorForm(error.response.data.error)
+
+            setTimeout(() => {
+                setErrorForm('')
+            }, 5000)
+        }
     }
 
     return (
@@ -76,24 +102,20 @@ export const LoginScreen = () => {
                             Login
                         </Typography>
                     </Box>
+                    {errorForm && (
+                        <Alert severity='warning' variant='outlined' sx={{ mt: 4, ml: 4 }}>
+                            {errorForm}
+                        </Alert>
+                    )}
                     <Grid item>
                         <TextField
-                            label='Email'
-                            id='email'
+                            id='username'
+                            label='Username'
                             variant='standard'
                             fullWidth
-                            {...register('email', {
-                                required: {
-                                    value: true,
-                                    message: 'Email is required',
-                                },
-                                pattern: {
-                                    value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                    message: 'Must be a valid email',
-                                },
-                            })}
+                            {...register('username', { required: true })}
                         />
-                        {errors.email && <Errorform error={errors.email.message} />}
+                        {formState.errors.username && <Errorform error={'Username is required'} />}
                     </Grid>
                     <Grid item>
                         <TextField
@@ -103,13 +125,19 @@ export const LoginScreen = () => {
                             type='password'
                             fullWidth
                             {...register('password', {
-                                required: 'You must specify a password',
+                                required: {
+                                    value: true,
+                                    message: 'Password is required',
+                                },
                                 minLength: {
                                     value: 6,
                                     message: 'Password must have at least 6 characters',
                                 },
                             })}
                         />
+                        {formState.errors.password && (
+                            <Errorform error={formState.errors.password.message} />
+                        )}
                     </Grid>
                     <Grid item>
                         <FormGroup>
