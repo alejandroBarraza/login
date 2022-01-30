@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Paper, TextField, Box, Button, Typography } from '@mui/material'
+import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -45,16 +45,11 @@ export const RegisterScreen = () => {
 
     const [errorForm, setErrorForm] = React.useState('')
     const { handleSubmit, register, formState } = useForm({ mode: 'onChange' })
+    console.log(errorForm)
 
     // submit Form
     const onSubmit = async (data, e) => {
         e.preventDefault()
-        // const userData = await PostRegister(data)
-        // console.log(userData)
-        // // localStorage.setItem('authToken', userData.token)
-        // // e.target.reset()
-        // navigate('/', { replace: true })
-
         const config = {
             header: {
                 'Content-Type': 'application/json',
@@ -69,7 +64,6 @@ export const RegisterScreen = () => {
         } catch (error) {
             console.log(error.response.data.error)
             setErrorForm(error.response.data.error)
-
             setTimeout(() => {
                 setErrorForm('')
             }, 5000)
@@ -90,6 +84,11 @@ export const RegisterScreen = () => {
                             Register
                         </Typography>
                     </Box>
+                    {errorForm && (
+                        <Alert severity='warning' variant='outlined' sx={{ mt: 4, ml: 4 }}>
+                            {errorForm}
+                        </Alert>
+                    )}
                     <Grid item>
                         <TextField
                             id='username'
@@ -99,7 +98,6 @@ export const RegisterScreen = () => {
                             {...register('username', { required: true })}
                         />
                         {formState.errors.username && <Errorform error={'Username is required'} />}
-                        {errorForm && <Errorform error={errorForm} />}
                     </Grid>
                     <Grid item>
                         <TextField
@@ -121,7 +119,6 @@ export const RegisterScreen = () => {
                         {formState.errors.email && (
                             <Errorform error={formState.errors.email.message} />
                         )}
-                        {errorForm && <Errorform error={errorForm} />}
                     </Grid>
                     <Grid item>
                         <TextField
