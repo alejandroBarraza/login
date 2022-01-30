@@ -45,7 +45,6 @@ export const RegisterScreen = () => {
 
     const [errorForm, setErrorForm] = React.useState('')
     const { handleSubmit, register, formState } = useForm({ mode: 'onChange' })
-    console.log(errorForm)
 
     // submit Form
     const onSubmit = async (data, e) => {
