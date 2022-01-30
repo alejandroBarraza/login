@@ -51,11 +51,6 @@ export const ResetPasswordScreen = () => {
     const params = useParams()
     const navigate = useNavigate()
     const [errorForm, setErrorForm] = React.useState('')
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     formState: { errors },
-    // } = useForm()
     const { handleSubmit, register, formState } = useForm({ mode: 'onChange', ...formOptions })
 
     const onSubmit = async (data, e) => {
@@ -66,12 +61,6 @@ export const ResetPasswordScreen = () => {
             },
         }
         try {
-            // const response = await axios.put(
-            //     `api/auth/reset-password/${params.token}`,
-            //     data,
-            //     config
-            // )
-
             const response = await axios.put(
                 `/api/auth/reset-password/${params.token}`,
                 data,
