@@ -21,7 +21,7 @@ export const AppRouter = () => {
                 <Route path='register' element={<RegisterScreen />} />
                 <Route path='login' element={<LoginScreen />} />
                 <Route path='forgot-password' element={<ForgotPasswordScreen />} />
-                <Route path='reset-password' element={<ResetPasswordScreen />} />
+                <Route path='reset-password/:token' element={<ResetPasswordScreen />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </Router>
