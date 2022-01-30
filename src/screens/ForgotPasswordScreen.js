@@ -1,9 +1,10 @@
 import React from 'react'
-import { Grid, Paper, TextField, Box, Button, Typography } from '@mui/material'
+import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { useForm } from 'react-hook-form'
 import { Errorform } from '../componets/utils/Errorform'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const styles = {
     container: {
@@ -41,14 +42,27 @@ export const ForgotPasswordScreen = () => {
         handleSubmit,
         formState: { errors },
     } = useForm()
+    const [errorForm, setErrorForm] = React.useState('')
 
-    const onSubmit = (data, e) => {
+    const onSubmit = async (data, e) => {
         e.preventDefault()
-        console.log(data)
-        console.log(e.target)
-        e.target.reset()
+        const config = {
+            header: {
+                'Content-Type': 'application/json',
+            },
+        }
 
-        navigate('/login')
+        try {
+            const response = await axios.post('api/auth/forgot-password/', data, config)
+            console.log(response)
+            navigate('/login')
+        } catch (error) {
+            setErrorForm(error.response.data.error)
+
+            setTimeout(() => {
+                setErrorForm('')
+            }, 5000)
+        }
     }
 
     return (
@@ -65,6 +79,11 @@ export const ForgotPasswordScreen = () => {
                             Forgot Password
                         </Typography>
                     </Box>
+                    {errorForm && (
+                        <Alert severity='error' variant='outlined'>
+                            {errorForm}
+                        </Alert>
+                    )}
                     <Box sx={styles.titleForgot}>
                         <Typography variant='subtitle1' color={grey[700]} sx={{ pb: 1, pt: 2 }}>
                             Enter the email address associated with your account
