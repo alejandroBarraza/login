@@ -1,14 +1,13 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
-import { ForgotPasswordScreen } from '../screens/ForgotPasswordScreen'
-import { LoginScreen } from '../screens/LoginScreen'
 import { NotFound } from '../screens/NotFound'
-import { RegisterScreen } from '../screens/RegisterScreen'
-import { ResetPasswordScreen } from '../screens/ResetPasswordScreen'
+import { RegisterScreen } from '../screens/register/RegisterScreen'
 import { PrivateRoutes } from './PrivateRoutes'
 import { PrivateScreen } from '../screens/PrivateScreen'
-// import { PrivateRoutes } from './PrivateRoutes'
+import { LoginScreen } from '../screens/login/LoginScreen'
+import { ForgotPasswordScreen } from '../screens/forgotPassword/ForgotPasswordScreen'
+import { ResetPasswordScreen } from '../screens/resetPassword/ResetPasswordScreen'
 
 export const AppRouter = () => {
     return (
