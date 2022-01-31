@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Outlet } from 'react-router-dom'
-import { LoginScreen } from '../screens/LoginScreen'
+import { LoginScreen } from '../screens/login/LoginScreen'
 
 export const PrivateRoutes = () => {
     const auth = localStorage.getItem('authToken')
