@@ -1,13 +1,18 @@
 import React from 'react'
-import axios from 'axios'
-import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
-import { grey } from '@mui/material/colors'
+
+import { useForgotPasswordMutation } from '../../app/services/auth'
 import { useForm } from 'react-hook-form'
-import { Errorform } from '../../componets/utils/Errorform'
 import { useNavigate } from 'react-router-dom'
+
+import { Grid, Paper, TextField, Box, Typography, Alert } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import LoadingButton from '@mui/lab/LoadingButton'
+
+import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './forgotStyle'
 
 export const ForgotPasswordScreen = () => {
+    const [forgotPassword, { isLoading }] = useForgotPasswordMutation()
     const navigate = useNavigate()
     const {
         register,
@@ -18,19 +23,11 @@ export const ForgotPasswordScreen = () => {
 
     const onSubmit = async (data, e) => {
         e.preventDefault()
-        const config = {
-            header: {
-                'Content-Type': 'application/json',
-            },
-        }
-
         try {
-            const response = await axios.post('api/auth/forgot-password/', data, config)
-            console.log(response)
+            await forgotPassword(data).unwrap()
             navigate('/login')
         } catch (error) {
-            setErrorForm(error.response.data.error)
-
+            setErrorForm(error.data.error)
             setTimeout(() => {
                 setErrorForm('')
             }, 5000)
@@ -84,9 +81,14 @@ export const ForgotPasswordScreen = () => {
                         {errors.email && <Errorform error={errors.email.message} />}
                     </Grid>
                     <Grid item>
-                        <Button type='submit' variant='contained' fullWidth>
+                        <LoadingButton
+                            type='submit'
+                            variant='contained'
+                            fullWidth
+                            loading={isLoading}
+                        >
                             Send
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                 </Grid>
             </Paper>

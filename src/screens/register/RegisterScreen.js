@@ -1,16 +1,25 @@
 import React from 'react'
-import axios from 'axios'
+
+// redux
+import { useDispatch } from 'react-redux'
+import { useRegisterUserMutation } from '../../app/services/auth'
+import { setUser } from '../../features/auth/authSlice'
 
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
+import { Grid, Paper, TextField, Box, Typography, Alert } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { grey } from '@mui/material/colors'
 
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './registerStyle'
 
 export const RegisterScreen = () => {
+    // mutations
+    const [registerUser, { isLoading }] = useRegisterUserMutation()
+    const dispatch = useDispatch()
+
     // if user still has token , he cant reaccess this page at least he logged out.
     const navigate = useNavigate()
     React.useEffect(() => {
@@ -25,20 +34,14 @@ export const RegisterScreen = () => {
     // submit Form
     const onSubmit = async (data, e) => {
         e.preventDefault()
-        const config = {
-            header: {
-                'Content-Type': 'application/json',
-            },
-        }
-
         try {
-            const response = await axios.post('api/auth/register', data, config)
-            localStorage.setItem('authToken', response.data.userData.token)
+            const { userData } = await registerUser(data).unwrap()
+            dispatch(setUser({ username: userData.username }))
+            localStorage.setItem('authToken', userData.token)
             e.target.reset()
             navigate('/', { replace: true })
         } catch (error) {
-            console.log(error.response.data.error)
-            setErrorForm(error.response.data.error)
+            setErrorForm(error.data.error)
             setTimeout(() => {
                 setErrorForm('')
             }, 5000)
@@ -118,9 +121,14 @@ export const RegisterScreen = () => {
                         )}
                     </Grid>
                     <Grid item>
-                        <Button type='submit' variant='contained' fullWidth>
+                        <LoadingButton
+                            type='submit'
+                            variant='contained'
+                            fullWidth
+                            loading={isLoading}
+                        >
                             Register
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                     <Box sx={styles.hasAccount}>
                         <Typography variant='body2' align='right' color={grey[600]}>

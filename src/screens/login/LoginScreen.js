@@ -1,23 +1,34 @@
 import React from 'react'
-import axios from 'axios'
+
+import { setUser } from '../../features/auth/authSlice'
+import { useDispatch } from 'react-redux'
+import { useLoginUserMutation } from '../../app/services/auth'
+
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+
+import LoadingButton from '@mui/lab/LoadingButton'
+import { grey } from '@mui/material/colors'
 import {
     Grid,
     Paper,
     TextField,
     Box,
-    Button,
     Typography,
     // Checkbox,
     // FormGroup,
     // FormControlLabel,
     Alert,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { Link, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './loginStyle'
+
 export const LoginScreen = () => {
+    // mutations
+    const [loginUser, { isLoading }] = useLoginUserMutation()
+    const dispatch = useDispatch()
+
     // if user has token , he cant reaccess this page at least he logged out.
     const navigate = useNavigate()
     React.useEffect(() => {
@@ -35,25 +46,16 @@ export const LoginScreen = () => {
 
     const onSubmit = async (data, e) => {
         e.preventDefault()
-
-        // Axios config.
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }
-
-        //  Save authToken to localStorage.
         try {
-            const response = await axios.post('api/auth/login', data, config)
-            localStorage.setItem('authToken', response.data.userData.token)
+            const { userData } = await loginUser(data).unwrap()
+            dispatch(setUser({ username: userData.username }))
+            localStorage.setItem('authToken', userData.token)
             navigate('/', { replace: true })
             e.target.reset()
 
             // if request failed.
         } catch (error) {
-            setErrorForm(error.response.data.error)
-
+            setErrorForm(error.data.error)
             setTimeout(() => {
                 setErrorForm('')
             }, 5000)
@@ -127,9 +129,14 @@ export const LoginScreen = () => {
                         </FormGroup>
                     </Grid> */}
                     <Grid item>
-                        <Button type='submit' variant='contained' fullWidth>
+                        <LoadingButton
+                            type='submit'
+                            variant='contained'
+                            fullWidth
+                            loading={isLoading}
+                        >
                             Login
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                     <Box sx={styles.hasAccount}>
                         <Link
