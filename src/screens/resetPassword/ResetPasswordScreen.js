@@ -1,12 +1,18 @@
 import React from 'react'
-import axios from 'axios'
+
+import { useResetPasswordMutation } from '../../app/services/auth'
+
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Grid, Paper, TextField, Box, Button, Typography, Alert } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { useForm } from 'react-hook-form'
-import { Errorform } from '../../componets/utils/Errorform'
+
 import { useParams, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+
+import { Grid, Paper, TextField, Box, Typography, Alert } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import LoadingButton from '@mui/lab/LoadingButton'
+
+import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './resetStyle'
 
 export const ResetPasswordScreen = () => {
@@ -18,8 +24,9 @@ export const ResetPasswordScreen = () => {
             .required('Confirm Password is required')
             .oneOf([Yup.ref('password')], 'Passwords must match'),
     })
-    const formOptions = { resolver: yupResolver(validationSchema) }
 
+    const formOptions = { resolver: yupResolver(validationSchema) }
+    const [resetPassword, { isLoading }] = useResetPasswordMutation()
     const params = useParams()
     const navigate = useNavigate()
     const [errorForm, setErrorForm] = React.useState('')
@@ -27,27 +34,16 @@ export const ResetPasswordScreen = () => {
 
     const onSubmit = async (data, e) => {
         e.preventDefault()
-        const config = {
-            header: {
-                'Content-Type': 'application/json',
-            },
-        }
         try {
-            const response = await axios.put(
-                `/api/auth/reset-password/${params.token}`,
-                data,
-                config
-            )
-            console.log(response)
+            await resetPassword({ data, token: params.token }).unwrap()
             navigate('/login')
         } catch (error) {
-            setErrorForm(error.response.data.error)
+            setErrorForm(error.data.error)
             setTimeout(() => {
                 setErrorForm('')
             }, 5000)
         }
     }
-
     return (
         <Box
             sx={styles.container}
@@ -117,9 +113,14 @@ export const ResetPasswordScreen = () => {
                         )}
                     </Grid>
                     <Grid item>
-                        <Button type='submit' variant='contained' fullWidth>
+                        <LoadingButton
+                            type='submit'
+                            variant='contained'
+                            fullWidth
+                            loading={isLoading}
+                        >
                             Send
-                        </Button>
+                        </LoadingButton>
                     </Grid>
                 </Grid>
             </Paper>
