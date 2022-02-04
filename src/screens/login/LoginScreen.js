@@ -19,6 +19,7 @@ import {
     // FormGroup,
     // FormControlLabel,
     Alert,
+    Divider,
 } from '@mui/material'
 
 import { Errorform } from '../../componets/utils/Errorform'
@@ -150,6 +151,32 @@ export const LoginScreen = () => {
                         >
                             Forgot your password?
                         </Link>
+                    </Box>
+                    <Box sx={{ pl: 4, pt: 5, display: 'flex', flexDirection: 'column' }}>
+                        <Divider />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                pt: 2,
+                            }}
+                        >
+                            <Typography variant='subtitle2' color={grey[600]}>
+                                Dont have an account?
+                                <Link
+                                    style={{
+                                        color: '#1565c0',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem',
+                                        paddingLeft: '0.5rem',
+                                    }}
+                                    to={'/register'}
+                                >
+                                    Register
+                                </Link>
+                            </Typography>
+                        </Box>
                     </Box>
                 </Grid>
             </Paper>
