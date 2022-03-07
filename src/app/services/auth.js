@@ -45,6 +45,18 @@ export const authApi = createApi({
                 },
             }),
         }),
+        loginGoogle: builder.mutation({
+            query: (tokenId) => ({
+                url: `login/google`,
+                method: 'POST',
+                body: JSON.stringify({
+                    tokenId,
+                }),
+                headers: {
+                    'Content-type': 'application/json',
+                },
+            }),
+        }),
     }),
 })
 
@@ -56,4 +68,5 @@ export const {
     useLoginUserMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
+    useLoginGoogleMutation,
 } = authApi

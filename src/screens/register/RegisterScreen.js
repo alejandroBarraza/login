@@ -2,22 +2,24 @@ import React from 'react'
 
 // redux
 import { useDispatch } from 'react-redux'
-import { useRegisterUserMutation } from '../../app/services/auth'
+import { useRegisterUserMutation, useLoginGoogleMutation } from '../../app/services/auth'
 import { setUser } from '../../features/auth/authSlice'
 
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
+import { GoogleLogin } from 'react-google-login'
 
-import { Grid, Paper, TextField, Box, Typography, Alert } from '@mui/material'
+import { Grid, Paper, TextField, Box, Typography, Alert, Divider } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { grey } from '@mui/material/colors'
 
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './registerStyle'
-
+import App from '../../../src/App.css'
 export const RegisterScreen = () => {
     // mutations
     const [registerUser, { isLoading }] = useRegisterUserMutation()
+    const [loginGoogle] = useLoginGoogleMutation()
     const dispatch = useDispatch()
 
     // if user still has token , he cant reaccess this page at least he logged out.
@@ -48,6 +50,33 @@ export const RegisterScreen = () => {
         }
     }
 
+    const onGoogleSuccess = async (googleData) => {
+        const { tokenId } = googleData
+        try {
+            // const { userData } = await loginGoogle(tokenId).unwrap()
+            // console.log(userData)
+            const res = await fetch('/api/auth/login/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tokenId,
+                }),
+            })
+            const { dataUser } = await res.json()
+            dispatch(setUser({ username: dataUser.username }))
+            localStorage.setItem('authToken', dataUser.token)
+            navigate('/', { replace: true })
+        } catch (error) {
+            setErrorForm(error)
+        }
+    }
+
+    const onGoogleFailure = async (response) => {
+        console.log(response)
+    }
+
     return (
         <Box
             sx={styles.container}
@@ -58,7 +87,7 @@ export const RegisterScreen = () => {
             <Paper elevation={3} sx={styles.paper}>
                 <Grid container direction={'column'} spacing={4}>
                     <Box sx={styles.title}>
-                        <Typography variant='h4' color={grey[600]}>
+                        <Typography variant='h4' color={grey[500]}>
                             Register
                         </Typography>
                     </Box>
@@ -140,6 +169,23 @@ export const RegisterScreen = () => {
                         >
                             Login
                         </Link>
+                    </Box>
+                    <Box sx={{ pl: 4, pt: 4 }}>
+                        <Divider>
+                            <Typography variant='body2' align='center' color={grey[600]}>
+                                OR
+                            </Typography>
+                        </Divider>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', pt: 2.5 }}>
+                            <GoogleLogin
+                                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                                buttonText='Sign up with Google'
+                                onSuccess={onGoogleSuccess}
+                                onFailure={onGoogleFailure}
+                                cookiePolicy={'single_host_origin'}
+                                className='google-login'
+                            />
+                        </Box>
                     </Box>
                 </Grid>
             </Paper>

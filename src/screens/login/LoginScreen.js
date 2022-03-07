@@ -6,6 +6,7 @@ import { useLoginUserMutation } from '../../app/services/auth'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { GoogleLogin } from 'react-google-login'
 
 import LoadingButton from '@mui/lab/LoadingButton'
 import { grey } from '@mui/material/colors'
@@ -63,6 +64,33 @@ export const LoginScreen = () => {
         }
     }
 
+    const onGoogleSuccess = async (googleData) => {
+        const { tokenId } = googleData
+        try {
+            // const { userData } = await loginGoogle(tokenId).unwrap()
+            // console.log(userData)
+            const res = await fetch('/api/auth/login/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tokenId,
+                }),
+            })
+            const { dataUser } = await res.json()
+            dispatch(setUser({ username: dataUser.username }))
+            localStorage.setItem('authToken', dataUser.token)
+            navigate('/', { replace: true })
+        } catch (error) {
+            setErrorForm(error)
+        }
+    }
+
+    const onGoogleFailure = async (response) => {
+        console.log(response)
+    }
+
     return (
         <Box
             sx={styles.container}
@@ -73,7 +101,7 @@ export const LoginScreen = () => {
             <Paper elevation={3} sx={styles.paper}>
                 <Grid container direction={'column'} spacing={4}>
                     <Box sx={styles.title}>
-                        <Typography variant='h4' color={grey[600]}>
+                        <Typography variant='h4' color={grey[500]}>
                             Login
                         </Typography>
                     </Box>
@@ -143,7 +171,7 @@ export const LoginScreen = () => {
                         <Link
                             to={'/forgot-password'}
                             style={{
-                                padding: '0.5rem',
+                                paddingTop: '0rem',
                                 color: '#1565c0',
                                 cursor: 'pointer',
                                 fontSize: '0.8rem',
@@ -152,17 +180,27 @@ export const LoginScreen = () => {
                             Forgot your password?
                         </Link>
                     </Box>
-                    <Box sx={{ pl: 4, pt: 5, display: 'flex', flexDirection: 'column' }}>
-                        <Divider />
+                    <Box
+                        sx={{
+                            pl: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        {/* <Divider /> */}
                         <Box
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                pt: 2,
+                                pt: 1,
                             }}
                         >
-                            <Typography variant='subtitle2' color={grey[600]}>
+                            <Typography
+                                variant='subtitle2'
+                                color={grey[600]}
+                                sx={{ marginLeft: 'auto' }}
+                            >
                                 Dont have an account?
                                 <Link
                                     style={{
@@ -176,6 +214,23 @@ export const LoginScreen = () => {
                                     Register
                                 </Link>
                             </Typography>
+                        </Box>
+                        <Box sx={{ pt: 4 }}>
+                            <Divider>
+                                <Typography variant='body2' align='center' color={grey[600]}>
+                                    OR
+                                </Typography>
+                            </Divider>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', pt: 2.5 }}>
+                                <GoogleLogin
+                                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                                    buttonText='Login with Google'
+                                    onSuccess={onGoogleSuccess}
+                                    onFailure={onGoogleFailure}
+                                    cookiePolicy={'single_host_origin'}
+                                    className='google-login'
+                                />
+                            </Box>
                         </Box>
                     </Box>
                 </Grid>

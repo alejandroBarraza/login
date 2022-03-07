@@ -21,8 +21,8 @@ export const styles = {
     },
     titleForgot: {
         display: 'flex',
-        flexDirection: 'column',
         justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
     },
 }
