@@ -26,5 +26,5 @@ export const { setUser, removeUser } = authSlice.actions
 export default authSlice.reducer
 
 // current user
-export const selectUser = (state) => state.auth.username
+export const selectUser = (state) => JSON.stringify(state.auth.username)
 export const isLogged = (state) => state.auth.isLogged

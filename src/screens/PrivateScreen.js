@@ -10,6 +10,7 @@ import { Button } from '@mui/material'
 export const PrivateScreen = () => {
     const dispatch = useDispatch()
     const username = useSelector(selectUser)
+    console.log(username)
     // If user access this page, but he is not logged in, redirect to login page
     const navigate = useNavigate()
     React.useEffect(() => {
