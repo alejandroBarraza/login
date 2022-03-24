@@ -21,7 +21,12 @@ import {
     // FormControlLabel,
     Alert,
     Divider,
+    IconButton,
+    InputAdornment,
 } from '@mui/material'
+
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './loginStyle'
@@ -29,6 +34,7 @@ import { styles } from './loginStyle'
 export const LoginScreen = () => {
     // mutations
     const [loginUser, { isLoading }] = useLoginUserMutation()
+    const [showPassword, setShowPassword] = React.useState(false)
     const dispatch = useDispatch()
 
     // if user has token , he cant reaccess this page at least he logged out.
@@ -91,6 +97,13 @@ export const LoginScreen = () => {
         console.log(response)
     }
 
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword)
+    }
+    const handleMouseDownPassword = (e) => {
+        e.preventDefault()
+    }
+
     return (
         <Box
             sx={styles.container}
@@ -125,8 +138,24 @@ export const LoginScreen = () => {
                             label='Password'
                             id='password'
                             variant='standard'
-                            type='password'
+                            type={showPassword ? 'text' : 'password'}
                             fullWidth
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            onClick={handleTogglePassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOffIcon />
+                                            ) : (
+                                                <VisibilityIcon />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                             {...register('password', {
                                 required: {
                                     value: true,
@@ -138,6 +167,7 @@ export const LoginScreen = () => {
                                 },
                             })}
                         />
+
                         {formState.errors.password && (
                             <Errorform error={formState.errors.password.message} />
                         )}
