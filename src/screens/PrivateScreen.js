@@ -9,6 +9,7 @@ import { Button } from '@mui/material'
 
 export const PrivateScreen = () => {
     const dispatch = useDispatch()
+    console.log('pase')
     const username = useSelector(selectUser)
     console.log(username)
     // If user access this page, but he is not logged in, redirect to login page
@@ -27,7 +28,7 @@ export const PrivateScreen = () => {
 
     return (
         <>
-            <h1>estoy en unra ruta privada, bienvenido {username}</h1>
+            <h1>estoy en unra ruta privada, bienvenido {username} </h1>
             <Button variant='contained' fullWidth onClick={handleLogout}>
                 Logout
             </Button>

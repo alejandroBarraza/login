@@ -2,7 +2,7 @@ import React from 'react'
 
 // redux
 import { useDispatch } from 'react-redux'
-import { useRegisterUserMutation, useLoginGoogleMutation } from '../../app/services/auth'
+import { useRegisterUserMutation } from '../../app/services/auth'
 import { setUser } from '../../features/auth/authSlice'
 
 import { useForm } from 'react-hook-form'
@@ -15,11 +15,11 @@ import { grey } from '@mui/material/colors'
 
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './registerStyle'
-import App from '../../../src/App.css'
+// import App from '../../../src/App.css'
 export const RegisterScreen = () => {
     // mutations
     const [registerUser, { isLoading }] = useRegisterUserMutation()
-    const [loginGoogle] = useLoginGoogleMutation()
+    // const [loginGoogle] = useLoginGoogleMutation()
     const dispatch = useDispatch()
 
     // if user still has token , he cant reaccess this page at least he logged out.

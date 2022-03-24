@@ -10,6 +10,7 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
+            console.log(action.payload)
             state.username = action.payload.username
             state.isLogged = true
         },
@@ -26,5 +27,5 @@ export const { setUser, removeUser } = authSlice.actions
 export default authSlice.reducer
 
 // current user
-export const selectUser = (state) => JSON.stringify(state.auth.username)
+export const selectUser = (state) => state.auth?.username
 export const isLogged = (state) => state.auth.isLogged
