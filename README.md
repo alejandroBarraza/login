@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# User db Client
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -29,42 +29,43 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# Client side user db 
+### 1 ) [backend repo](https://github.com/alejandroBarraza/login-backend) for more information.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2 ) Minimalist client side app build in react with Material ui.
+ - Redux toolkit
+ - Redux rtk query
+ - Json web token
+ - Cloudinary
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+# Screenshot app
+### 1 ) Login.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Login](https://res.cloudinary.com/dzq3t5xj3/image/upload/v1648241681/database/Screen_Shot_2022-03-25_at_17.50.28_lvq11d.png
+)
 
-### Code Splitting
+### 1 ) Register.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+![Register](https://res.cloudinary.com/dzq3t5xj3/image/upload/v1648241667/database/Screen_Shot_2022-03-25_at_17.50.43_ixxusl.png)
 
-### Analyzing the Bundle Size
+### 1 ) Forgot Password.
+![Forgot Password](https://res.cloudinary.com/dzq3t5xj3/image/upload/v1648241693/database/Screen_Shot_2022-03-25_at_17.51.12_iv4l4n.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+### 1 ) Resset Password.
+![link reset password](https://res.cloudinary.com/dzq3t5xj3/image/upload/v1648241690/database/Screen_Shot_2022-03-25_at_17.51.33_sjibua.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+![ reset password](https://res.cloudinary.com/dzq3t5xj3/image/upload/v1648241710/database/Screen_Shot_2022-03-25_at_17.51.43_xobjrr.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
