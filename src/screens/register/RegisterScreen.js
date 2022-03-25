@@ -9,16 +9,28 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { GoogleLogin } from 'react-google-login'
 
-import { Grid, Paper, TextField, Box, Typography, Alert, Divider } from '@mui/material'
+import {
+    Grid,
+    Paper,
+    TextField,
+    Box,
+    Typography,
+    Alert,
+    Divider,
+    InputAdornment,
+    IconButton,
+} from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { grey } from '@mui/material/colors'
 
 import { Errorform } from '../../componets/utils/Errorform'
 import { styles } from './registerStyle'
-// import App from '../../../src/App.css'
 export const RegisterScreen = () => {
     // mutations
     const [registerUser, { isLoading }] = useRegisterUserMutation()
+    const [showPassword, setShowPassword] = React.useState(false)
     // const [loginGoogle] = useLoginGoogleMutation()
     const dispatch = useDispatch()
 
@@ -77,6 +89,15 @@ export const RegisterScreen = () => {
         console.log(response)
     }
 
+    // show hide/passwords
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword)
+    }
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault()
+    }
+
     return (
         <Box
             sx={styles.container}
@@ -132,8 +153,24 @@ export const RegisterScreen = () => {
                             label='Password'
                             id='password'
                             variant='standard'
-                            type='password'
+                            type={showPassword ? 'text' : 'password'}
                             fullWidth
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            onClick={handleTogglePassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOffIcon />
+                                            ) : (
+                                                <VisibilityIcon />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                             {...register('password', {
                                 required: {
                                     value: true,
