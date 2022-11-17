@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectUser, removeUser } from '../features/auth/authSlice'
 
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 
 export const PrivateScreen = () => {
     const dispatch = useDispatch()
@@ -26,10 +26,36 @@ export const PrivateScreen = () => {
 
     return (
         <>
-            <h1>estoy en unra ruta privada, bienvenido {username}</h1>
-            <Button variant='contained' fullWidth onClick={handleLogout}>
-                Logout
-            </Button>
+            <Grid
+                container
+                spacing={2}
+                direction='column'
+                alignItems='center'
+                justifyContent='center'
+                style={{ minHeight: '100vh' }}
+            >
+                <Grid item xs={1} alignItems='center' spacing={1} justifyContent='center'>
+                    <h1> Hi! 👋 {username}</h1>
+                    <p>this is a demo for an authentication project</p>
+                </Grid>
+                <Grid item xs={3}>
+                    <Button variant='contained' fullWidth onClick={handleLogout}>
+                        Logout
+                    </Button>
+                </Grid>
+            </Grid>
         </>
     )
 }
+// ;<Grid
+//     container
+//     spacing={0}
+//     direction='column'
+//     alignItems='center'
+//     justifyContent='center'
+//     style={{ minHeight: '100vh' }}
+// >
+//     <Grid item xs={3}>
+//         <LoginForm />
+//     </Grid>
+// </Grid>

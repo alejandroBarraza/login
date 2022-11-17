@@ -50,6 +50,7 @@ export const RegisterScreen = () => {
         e.preventDefault()
         try {
             const { userData } = await registerUser(data).unwrap()
+            console.log(userData)
             dispatch(setUser({ username: userData.username }))
             localStorage.setItem('authToken', userData.token)
             e.target.reset()
@@ -64,6 +65,7 @@ export const RegisterScreen = () => {
 
     const onGoogleSuccess = async (googleData) => {
         const { tokenId } = googleData
+        console.log({ tokenId: tokenId })
         try {
             // const { userData } = await loginGoogle(tokenId).unwrap()
             // console.log(userData)
@@ -77,6 +79,7 @@ export const RegisterScreen = () => {
                 }),
             })
             const { dataUser } = await res.json()
+            console.log({ dataUse: dataUser })
             dispatch(setUser({ username: dataUser.username }))
             localStorage.setItem('authToken', dataUser.token)
             navigate('/', { replace: true })
