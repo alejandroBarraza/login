@@ -69,7 +69,7 @@ export const RegisterScreen = () => {
         try {
             // const { userData } = await loginGoogle(tokenId).unwrap()
             // console.log(userData)
-            const res = await fetch('/api/auth/login/google', {
+            const res = await fetch(`${process.env.REACT_APP_PUBLIC_URL}/api/auth/login/google`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
