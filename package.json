@@ -27,11 +27,12 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "serve -s build",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "start:prod": "react-scripts start --env=production"
   },
   "eslintConfig": {
     "extends": [
